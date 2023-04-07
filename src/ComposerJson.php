@@ -291,7 +291,7 @@ class ComposerJson
     {
         // Empty arrays may lead to bad encoding since we can't be sure whether they need to be arrays or objects.
         $json = $this->jsonCleaner->removeEmptyKeysFromJsonArray($json);
-        $jsonContent = json_encode($json, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+        $jsonContent = json_encode($json, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES);
 
         return $this->jsonInliner->inlineSections($jsonContent);
     }

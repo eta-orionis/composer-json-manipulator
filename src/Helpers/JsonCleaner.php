@@ -13,7 +13,11 @@ final class JsonCleaner
     public function removeEmptyKeysFromJsonArray(array $data): array
     {
         foreach ($data as $key => $value) {
-            if (! is_array($value)) {
+	    if ($value === null) {
+	    	unset($data[$key]);
+	    }
+	    
+	    if (! is_array($value)) {
                 continue;
             }
 
