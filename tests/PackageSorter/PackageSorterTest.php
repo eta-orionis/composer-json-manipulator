@@ -2,21 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Symplify\ComposerJsonManipulator\Tests\Sorter;
+namespace EtaOrionis\ComposerJsonManipulator\Tests\PackageSorter;
 
 use Iterator;
-use Symplify\ComposerJsonManipulator\Sorter\ComposerPackageSorter;
-use Symplify\ComposerJsonManipulator\Tests\Kernel\ComposerJsonManipulatorKernel;
-use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
+use EtaOrionis\ComposerJsonManipulator\Helpers\PackageSorter;
+use PHPUnit\Framework\TestCase;
 
-final class ComposerPackageSorterTest extends AbstractKernelTestCase
+final class PackageSorterTest extends TestCase
 {
-    private ComposerPackageSorter $composerPackageSorter;
+    private PackageSorter $packageSorter;
 
     protected function setUp(): void
     {
-        $this->bootKernel(ComposerJsonManipulatorKernel::class);
-        $this->composerPackageSorter = $this->getService(ComposerPackageSorter::class);
+        $this->packageSorter = new PackageSorter();
     }
 
     /**
@@ -26,7 +24,7 @@ final class ComposerPackageSorterTest extends AbstractKernelTestCase
      */
     public function test(array $packages, array $expectedSortedPackages): void
     {
-        $sortedPackages = $this->composerPackageSorter->sortPackages($packages);
+        $sortedPackages = $this->packageSorter->sortPackages($packages);
         $this->assertSame($expectedSortedPackages, $sortedPackages);
     }
 

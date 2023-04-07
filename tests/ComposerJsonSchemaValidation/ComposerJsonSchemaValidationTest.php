@@ -2,45 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Symplify\ComposerJsonManipulator\Tests\ComposerJsonSchemaValidation;
+namespace EtaOrionis\ComposerJsonManipulator\Tests\ComposerJsonSchemaValidation;
 
-use Symplify\ComposerJsonManipulator\FileSystem\JsonFileManager;
-use Symplify\ComposerJsonManipulator\Tests\Kernel\ComposerJsonManipulatorKernel;
-use Symplify\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
-use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
-use Symplify\SmartFileSystem\SmartFileSystem;
+use EtaOrionis\ComposerJsonManipulator\ComposerJson;
+use PHPUnit\Framework\TestCase;
+use EtaOrionis\ComposerJsonManipulator\Helpers\Section;
 
-final class ComposerJsonSchemaValidationTest extends AbstractKernelTestCase
+final class ComposerJsonSchemaValidationTest extends TestCase
 {
-    private JsonFileManager $jsonFileManager;
-
-    private SmartFileSystem $smartFileSystem;
-
-    protected function setUp(): void
-    {
-        $this->bootKernel(ComposerJsonManipulatorKernel::class);
-
-        $this->jsonFileManager = $this->getService(JsonFileManager::class);
-        $this->smartFileSystem = new SmartFileSystem();
-    }
-
     public function testCheckEmptyKeysAreRemoved(): void
     {
         $sourceJsonPath = __DIR__ . '/Source/symfony-website_skeleton-composer.json';
         $targetJsonPath = sys_get_temp_dir() . '/composer_json_manipulator_test_schema_validation.json';
 
-        $sourceJson = $this->jsonFileManager->loadFromFilePath($sourceJsonPath);
-        $this->smartFileSystem->dumpFile($targetJsonPath, $this->jsonFileManager->encodeJsonToFileContent($sourceJson));
+        $cj = ComposerJson::fromFile($sourceJsonPath);
+        $cj->save($targetJsonPath);
 
-        $sourceJson = $this->jsonFileManager->loadFromFilePath($sourceJsonPath);
-        $targetJson = $this->jsonFileManager->loadFromFilePath($targetJsonPath);
+        $sourceJson = json_decode(file_get_contents($sourceJsonPath), true);
+        $targetJson = json_decode(file_get_contents($targetJsonPath), true);
 
         /*
          * Check empty keys are present in "source" but not in "target"
          */
-        $this->assertArrayHasKey(ComposerJsonSection::REQUIRE_DEV, $sourceJson);
+        $this->assertArrayHasKey(Section::REQUIRE_DEV, $sourceJson);
         $this->assertArrayHasKey('auto-scripts', $sourceJson['scripts']);
-        $this->assertArrayNotHasKey(ComposerJsonSection::REQUIRE_DEV, $targetJson);
+        $this->assertArrayNotHasKey(Section::REQUIRE_DEV, $targetJson);
         $this->assertArrayNotHasKey('auto-scripts', $targetJson['scripts']);
     }
 }

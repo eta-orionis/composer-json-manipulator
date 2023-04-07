@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Symplify\ComposerJsonManipulator\ValueObject;
+namespace EtaOrionis\ComposerJsonManipulator\Helpers;
 
 /**
  * @api
  */
-final class ComposerJsonSection
+final class Section
 {
     /**
      * @var string

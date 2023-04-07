@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symplify\ComposerJsonManipulator\Json;
+namespace EtaOrionis\ComposerJsonManipulator\Helpers;
 
 final class JsonCleaner
 {
@@ -21,6 +21,10 @@ final class JsonCleaner
                 unset($data[$key]);
             } else {
                 $data[$key] = $this->removeEmptyKeysFromJsonArray($value);
+                //could have been emptied as result of recursive call, check again
+                if ($data[$key] === []) {
+                    unset($data[$key]);
+                }
             }
         }
 

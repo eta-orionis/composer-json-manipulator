@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Symplify\ComposerJsonManipulator\Sorter;
-
-use Nette\Utils\Strings;
+namespace EtaOrionis\ComposerJsonManipulator\Helpers;
 
 /**
  * Mostly inspired by https://github.com/composer/composer/blob/master/src/Composer/Json/JsonManipulator.php
  *
  * @see \Symplify\ComposerJsonManipulator\Tests\Sorter\ComposerPackageSorterTest
  */
-final class ComposerPackageSorter
+final class PackageSorter
 {
     /**
      * @see https://regex101.com/r/tMrjMY/1
@@ -48,10 +46,9 @@ final class ComposerPackageSorter
     private function createNameWithPriority(string $requirementName): string
     {
         if ($this->isPlatformPackage($requirementName)) {
-            return Strings::replace(
-                $requirementName,
-                self::REQUIREMENT_TYPE_REGEX,
-                static function (array $match): string {
+            return preg_replace_callback(
+            self::REQUIREMENT_TYPE_REGEX,
+                 function (array $match): string {
                     $name = $match['name'];
                     if ($name === 'php') {
                         return '0-' . $name;
@@ -70,7 +67,8 @@ final class ComposerPackageSorter
                     }
 
                     return '3-' . $name;
-                }
+                },
+                $requirementName
             );
         }
 
@@ -79,6 +77,6 @@ final class ComposerPackageSorter
 
     private function isPlatformPackage(string $name): bool
     {
-        return (bool) Strings::match($name, self::PLATFORM_PACKAGE_REGEX);
+        return (bool) preg_match( self::PLATFORM_PACKAGE_REGEX, $name);
     }
 }

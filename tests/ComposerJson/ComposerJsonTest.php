@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Symplify\ComposerJsonManipulator\Tests\ValueObject;
+namespace EtaOrionis\ComposerJsonManipulator\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symplify\ComposerJsonManipulator\ValueObject\ComposerJson;
+use EtaOrionis\ComposerJsonManipulator\ComposerJson;
 
 final class ComposerJsonTest extends TestCase
 {
